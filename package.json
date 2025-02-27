@@ -4,9 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "npm build",
-    "start": "npm start index.js",
-    "dev": "../content-kingdom-BE1/node_modules/.bin/nodemon ../content-kingdom-BE/index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "devDependencies": {
     "@types/bun": "latest"
