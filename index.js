@@ -24,6 +24,11 @@ app.use((req, res, next) => {
 app.get("/get-download-url", async (req, res) => {
   const { url: reelUrl } = req.query;
 
+  if(reelUrl === "" || !reelUrl) {
+    res.status(400).send({ success: false, message: "Invalid URL" });
+    return;
+  }
+
   const downloadUrl = await downloadReel(reelUrl);
 
   if(downloadUrl) {
