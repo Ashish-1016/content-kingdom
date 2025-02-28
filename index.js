@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { downloadReel } from "./utils/reel-downloader.js";
+import playwright from "playwright-aws-lambda";
 
 dotenv.config();
 
@@ -44,6 +45,13 @@ app.get('/', (req, res) => {
     success: true,
     message: "Hello From Content Kingdom"
   });
+})
+
+app.get('/playwright', async (req, res) => {
+  const browser = await playwright.launchChromium({ headless: true });
+  const googlePage = await browser.newPage()
+  await googlePage.goto('https://www.google.com');
+  res.send({ success: true, res:'Google reached'  });
 })
 
 app.listen(process.env.PORT, () => {
