@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { downloadReel } from "./utils/reel-downloader.js";
 
 dotenv.config();
 
@@ -13,7 +14,6 @@ app.use(express.json())
 
 
 app.use((req, res, next) => {
-  console.log('-->', process.env.AUTH_HEADER)
   if(req.headers.authorization === process.env.AUTH_HEADER) {
     next()
   } else {
@@ -21,9 +21,17 @@ app.use((req, res, next) => {
   }
 })
 
-app.get("/test", (req, res) => {
-  const { url } = req.query;
-  res.status(200).send({ success: true, url });
+app.get("/get-download-url", async (req, res) => {
+  const { url: reelUrl } = req.body;
+
+  const downloadUrl = await downloadReel(reelUrl);
+
+  if(downloadUrl) {
+    res.status(200).send({ success: true, downloadUrl });
+  } else {
+    res.status(500).send({ success: false });
+  }
+
 });
 
 app.get('/', (req, res) => {
@@ -34,7 +42,7 @@ app.get('/', (req, res) => {
 })
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+  console.log(`Content Kingdom server is running...`);
 });
 
 
