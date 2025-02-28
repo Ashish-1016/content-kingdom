@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 })
 
 app.get("/get-download-url", async (req, res) => {
-  const { url: reelUrl } = req.body;
+  const { url: reelUrl } = req.query;
 
   const downloadUrl = await downloadReel(reelUrl);
 
