@@ -4,21 +4,17 @@ import chromium from '@sparticuz/chromium';
 export async function downloadReel(reelUrl) {
   try {
     const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      ignoreHTTPSErrors: true,
-      headless: true,
+      headless: 'shell',
       slowMo: 300,
-      // args: [
-      //   '--no-sandbox',
-      //   '--disable-setuid-sandbox',
-      //   '--disable-dev-shm-usage',
-      //   '--disable-accelerated-2d-canvas',
-      //   '--disable-gpu',
-      //   '--disable-extensions',
-      //   '--disable-infobars',
-      // ],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--disable-gpu',
+        '--disable-extensions',
+        '--disable-infobars',
+      ],
     });
 
     const page = await browser.newPage();
