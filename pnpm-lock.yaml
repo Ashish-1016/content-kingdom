@@ -29,6 +29,12 @@ dependencies:
   nodemon:
     specifier: ^3.1.9
     version: 3.1.9
+  playwright-aws-lambda:
+    specifier: ^0.11.0
+    version: 0.11.0(playwright-core@1.50.1)
+  playwright-core:
+    specifier: ^1.50.1
+    version: 1.50.1
   puppeteer:
     specifier: ^24.3.0
     version: 24.3.0
@@ -1136,6 +1142,22 @@ packages:
   /picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
+    dev: false
+
+  /playwright-aws-lambda@0.11.0(playwright-core@1.50.1):
+    resolution: {integrity: sha512-PVwGbLWMHrtgKigCHgg6VOOtFWci/IyvfDK1llrU4QOp+U5K8i0vpXTEOkTRMjfTHBcDhUueWMln4C/za0CpdQ==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      playwright-core: ^1
+    dependencies:
+      lambdafs: 2.1.1
+      playwright-core: 1.50.1
+    dev: false
+
+  /playwright-core@1.50.1:
+    resolution: {integrity: sha512-ra9fsNWayuYumt+NiM069M6OkcRb1FZSK8bgi66AtpFoWkg2+y0bJSNmkFrWhMbEBbVKC/EruAHH3g0zmtwGmQ==}
+    engines: {node: '>=18'}
+    hasBin: true
     dev: false
 
   /progress@2.0.3:
