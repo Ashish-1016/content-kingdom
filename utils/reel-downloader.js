@@ -1,12 +1,46 @@
-import puppeteer from 'puppeteer';
-import chromium from '@sparticuz/chromium';
+import chromeAWS from "chrome-aws-lambda";
+import puppeteerCore from "puppeteer-core";
+import puppeteerDev  from "puppeteer";
+
+let chrome = {};
+let puppeteer;
+
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  chrome = chromeAWS
+  puppeteer = puppeteerCore
+} else {
+  puppeteer = puppeteerDev
+}
 
 export async function downloadReel(reelUrl) {
-  try {
-    const browser = await puppeteer.launch({
-      headless: 'shell',
-      slowMo: 300,
+
+  let options = {};
+
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    options = {
       args: [
+              ...chrome.args,
+             "--hide-scrollbars",
+             "--disable-web-security",
+             '--no-sandbox',
+             '--disable-setuid-sandbox',
+             '--disable-dev-shm-usage',
+             '--disable-accelerated-2d-canvas',
+             '--disable-gpu',
+             '--disable-extensions',
+             '--disable-infobars',
+      ],
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    };
+  }
+  else {
+    options = {
+      args: [
+        "--hide-scrollbars",
+        "--disable-web-security",
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
@@ -15,7 +49,15 @@ export async function downloadReel(reelUrl) {
         '--disable-extensions',
         '--disable-infobars',
       ],
-    });
+        defaultViewport: null,
+        headless: true,
+        ignoreHTTPSErrors: true,
+    };
+  }
+
+  try {
+
+    let browser = await puppeteer.launch(options);
 
     const page = await browser.newPage();
 
