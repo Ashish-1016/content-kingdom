@@ -35,7 +35,12 @@ app.get("/get-download-url", async (req, res) => {
 
   const { youtubeTitle, description, downloadUrl } = await downloadReel(reelUrl, reelType);
 
-  if(youtubeTitle && downloadUrl && description) {
+  if(!downloadUrl) {
+    res.status(500).send({ success: false, message: "Error downloading reel" });
+    return;
+  }
+
+  if(youtubeTitle && description) {
     res.status(200).send({
       success: true,
       downloadUrl,
