@@ -21,17 +21,27 @@ app.use((req, res, next) => {
 })
 
 app.get("/get-download-url", async (req, res) => {
-  const { url: reelUrl } = req.query;
+  const { url: reelUrl, reelType } = req.query;
 
   if(reelUrl === "" || !reelUrl) {
     res.status(400).send({ success: false, message: "Invalid URL" });
     return;
   }
 
-  const downloadUrl = await downloadReel(reelUrl);
+  if(!reelType) {
+    res.status(400).send({ success: false, message: "Invalid or No reelType" });
+    return;
+  }
 
-  if(downloadUrl) {
-    res.status(200).send({ success: true, downloadUrl });
+  const { youtubeTitle, description, downloadUrl } = await downloadReel(reelUrl, reelType);
+
+  if(youtubeTitle && downloadUrl && description) {
+    res.status(200).send({
+      success: true,
+      downloadUrl,
+      youtubeTitle,
+      description
+    });
   } else {
     res.status(500).send({ success: false });
   }
@@ -48,5 +58,4 @@ app.get('/', (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`Content Kingdom server is running...`);
 });
-
 
