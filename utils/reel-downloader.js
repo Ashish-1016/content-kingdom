@@ -1,9 +1,10 @@
 import { fallBackTitleGenerator, reelToShortsAiPromptGenerator } from "./gemini-helper.js";
 import dotenv from "dotenv";
+import { fetchInstagramData } from "./happy-dl-api.js";
 dotenv.config();
 
-export async function downloadReel(reelUrl, reelType) {
-  const url = `${process.env.RAPID_API_URL}?url=${reelUrl}&reelType=${reelType}`;
+export async function downloadReelV1(reelUrl, reelType) {
+  const url = `${process.env.RAPID_API_URL}?url=${reelUrl}`;
 
   const options = {
     method: 'GET',
@@ -14,18 +15,18 @@ export async function downloadReel(reelUrl, reelType) {
   };
 
   try {
-    const response = await fetch(url, options);
-    const result = await response.json();
+    const rapidApiResponse = await fetch(url, options);
+    const rapidApiData = await rapidApiResponse.json();
 
     const reelToShortsAiInputJSON  = {
-      title: result.title,
+      title: rapidApiData.title,
       reelType,
     }
 
     const { youtubeTitle, description } = await reelToShortsAiPromptGenerator(reelToShortsAiInputJSON);
 
     let title;
-    if (result.links.length > 0) {
+    if (rapidApiData.links.length > 0) {
 
       if(!youtubeTitle) {
         title = await fallBackTitleGenerator(reelType);
@@ -34,7 +35,7 @@ export async function downloadReel(reelUrl, reelType) {
         }
 
       return {
-        downloadUrl: result.links[1].link,
+        downloadUrl: rapidApiData.links[1].link,
         youtubeTitle: title,
         description: description ?? '#shorts #shortsvideo #youtubeshorts'
       };
@@ -42,7 +43,45 @@ export async function downloadReel(reelUrl, reelType) {
     return null;
   }
   catch (error) {
-    console.error("Error downloading reel: ", error);
+    console.error("Error downloading reel: V1", error);
+    return null;
+  }
+
+}
+
+export async function downloadReelV2(reelUrl, reelType) {
+
+  try {
+    const happyDlData = await fetchInstagramData(reelUrl);
+
+    const reelToShortsAiInputJSON  = {
+      title: "",
+      reelType,
+    }
+
+    const { youtubeTitle, description } = await reelToShortsAiPromptGenerator(reelToShortsAiInputJSON);
+
+    let title;
+
+    if (happyDlData) {
+
+      if (!youtubeTitle) {
+        title = await fallBackTitleGenerator(reelType);
+      } else {
+        title = youtubeTitle;
+      }
+
+      return {
+        downloadUrl : happyDlData,
+        youtubeTitle: title,
+        description : description ?? '#shorts #shortsvideo #youtubeshorts'
+      };
+
+    }
+
+  }
+  catch (error) {
+    console.error("Error downloading reel: V2", error);
     return null;
   }
 

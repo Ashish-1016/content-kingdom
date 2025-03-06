@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { downloadReel } from "./utils/reel-downloader.js";
+import { downloadReelV1, downloadReelV2 } from "./utils/reel-downloader.js";
 dotenv.config();
 
 const app = express();
 app.use(cors({
   origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET"],
 }))
 app.use(express.json())
 
@@ -33,7 +33,7 @@ app.get("/get-download-url", async (req, res) => {
     return;
   }
 
-  const { youtubeTitle, description, downloadUrl } = await downloadReel(reelUrl, reelType);
+  const { youtubeTitle, description, downloadUrl } = await downloadReelV2(reelUrl, reelType);
 
   if(!downloadUrl) {
     res.status(500).send({ success: false, message: "Error downloading reel" });

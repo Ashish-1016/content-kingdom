@@ -37,7 +37,7 @@ Please analyze this input and generate appropriate YouTube Shorts content as fol
      - Check if the title makes sense or is just promotional content
      - Ignore any emails, phone numbers, or URLs in the title
      - Create a catchy, short YouTube Shorts title that matches the theme
-   - If no meaningful title exists:
+   - If no meaningful title OR No title Key OR No value in title key exists:
      - Generate a new catchy YouTube Shorts title based solely on the "reelType"
    - IMPORTANT: All titles must include #shorts #shortsvideo #youtubeshorts at the end
    - IMPORTANT: The title must be less than 100 characters
