@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { downloadReelV1 } from "./utils/reel-downloader.js";
 import { downloadReelV3 } from "./utils/puppetter-reel-downloader.js";
 dotenv.config();
 
@@ -21,17 +20,6 @@ app.use((req, res, next) => {
   }
 })
 
-app.get('/sample', async (req, res) => {
-
-  const title = await downloadReelV3();
-
-  if (!title) {
-    res.status(500).send({ success: false, message: "Error downloading reel" });
-  }
-  res.status(200).send({ success: true, title });
-
-})
-
 app.get("/get-download-url", async (req, res) => {
   const { url: reelUrl, reelType } = req.query;
 
@@ -45,23 +33,24 @@ app.get("/get-download-url", async (req, res) => {
     return;
   }
 
-  const { youtubeTitle, description, downloadUrl } = await downloadReelV1(reelUrl, reelType);
+  const { youtubeTitle, downloadUrl, description } = await downloadReelV3(reelUrl, reelType);
 
-  if(!downloadUrl) {
-    res.status(500).send({ success: false, message: "Error downloading reel" });
+  if(!downloadUrl || !youtubeTitle || !description) {
+
+    res.status(500).send({
+      success: false,
+      message: "Error downloading reel or generating youtube title or generating description"
+    });
+
     return;
   }
 
-  if(youtubeTitle && description) {
     res.status(200).send({
       success: true,
       downloadUrl,
       youtubeTitle,
       description
     });
-  } else {
-    res.status(500).send({ success: false });
-  }
 
 });
 
