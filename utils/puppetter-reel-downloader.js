@@ -15,7 +15,7 @@ export async function downloadReelV3() {
     defaultViewport: chromium.defaultViewport,
     headless: chromium.headless,
     ...(isProd ?
-      { executablePath: chromium.executablePath(), }:
+      { executablePath: chromium.executablePath('/tmp'), }:
       { channel: 'chrome' })
   });
 
