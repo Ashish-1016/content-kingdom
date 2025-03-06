@@ -14,9 +14,8 @@ export async function downloadReelV3() {
     args: !isProd ? puppeteer.defaultArgs() : [...chromium.args, '--hide-scrollbars', '--incognito', '--no-sandbox'],
     defaultViewport: chromium.defaultViewport,
     headless: chromium.headless,
-    ignoreHTTPSErrors: true,
     ...(isProd ?
-      { executablePath: process.env.CHROME_PROD_PATH, }:
+      { executablePath: chromium.executablePath(), }:
       { channel: 'chrome' })
   });
 
