@@ -10,12 +10,14 @@ export async function downloadReelV3() {
 
   const isProd = !!process.env.CHROME_PROD_PATH
 
+  const executablePath = await chromium.executablePath(process.env.CHROME_PROD_PATH);
+
   const browser = await puppeteer.launch({
     args: !isProd ? puppeteer.defaultArgs() : [...chromium.args, '--hide-scrollbars', '--incognito', '--no-sandbox'],
     defaultViewport: chromium.defaultViewport,
     headless: chromium.headless,
     ...(isProd ?
-      { executablePath: chromium.executablePath('/tmp'), }:
+      { executablePath: executablePath, }:
       { channel: 'chrome' })
   });
 
