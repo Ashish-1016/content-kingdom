@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 app.use(cors({
   origin: "*",
-  methods: ["GET"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
 }))
 app.use(express.json())
 
