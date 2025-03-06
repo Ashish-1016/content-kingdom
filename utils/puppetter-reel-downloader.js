@@ -8,14 +8,16 @@ chromium.setGraphicsMode=false;
 export async function downloadReelV3() {
 
 
-  const isLocal = !!process.env.CHROME_DEV_PATH
+  const isProd = !!process.env.CHROME_PROD_PATH
 
   const browser = await puppeteer.launch({
-    args: chromium.args,
+    args: !isProd ? puppeteer.defaultArgs() : [...chromium.args, '--hide-scrollbars', '--incognito', '--no-sandbox'],
     defaultViewport: chromium.defaultViewport,
-    channel: 'chrome',
     headless: chromium.headless,
     ignoreHTTPSErrors: true,
+    ...(isProd ?
+      { executablePath: process.env.CHROME_PROD_PATH, }:
+      { channel: 'chrome' })
   });
 
   const page = await browser.newPage();
