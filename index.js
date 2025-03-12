@@ -65,9 +65,16 @@ app.post('/sample',(req, res) => {
 
   console.log('BODY: ', req.body);
 
-  res.status(200).send({
+  if(req.body.data) {
+    res.status(200).send({
+      success: true,
+      message: "Hello from Content Kingdom"
+    })
+    }
+
+  res.status(400).send({
     success: true,
-    message: "Route not found"
+    message: "Error in JSON Format"
   })
 })
 
