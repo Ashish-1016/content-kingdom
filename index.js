@@ -61,7 +61,7 @@ app.get('/', (req, res) => {
   });
 })
 
-app.get('/sample',(req, res) => {
+app.post('/sample',(req, res) => {
 
   console.log('BODY: ', req.body);
 
