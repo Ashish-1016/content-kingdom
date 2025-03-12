@@ -61,6 +61,16 @@ app.get('/', (req, res) => {
   });
 })
 
+app.get('/sample',(req, res) => {
+
+  console.log('BODY: ', req.body);
+
+  res.status(200).send({
+    success: true,
+    message: "Route not found"
+  })
+})
+
 app.listen(process.env.PORT, () => {
   console.log(`Content Kingdom server is running...`);
 });
