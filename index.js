@@ -66,8 +66,8 @@ app.post('/sample',(req, res) => {
   console.log('BODY: ', req.body);
 
   if(req.body.data) {
-    const videoIds = req.body.data.split(',').trim().map(item => item.trim());
-    console.log('videoIds: ', videoIds);
+    const videoIds = req.body.data
+    console.log('videoIds: ', videoIds, typeof videoIds);
     res.status(200).send({
       success: true,
       message: "Success",
