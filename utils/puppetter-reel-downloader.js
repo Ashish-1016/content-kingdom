@@ -54,24 +54,37 @@ export async function downloadReelV3(reelUrl, reelType) {
 
     const downloadUrl = await page.evaluate(element => element.href, downloadReelButton);
 
-    const reelTitleSelector = '#app > div.search-result.show > div > div > div.output-list__caption > p'
+    let reelTitle = "";
+    try {
+      const reelTitleSelector = '#app > div.search-result.show > div > div > div.output-list__caption > p';
 
-    const reelTitleElement = await page.waitForSelector(reelTitleSelector, { timeout: 8000 });
-    const reelTitle = await page.evaluate(element => element.textContent, reelTitleElement);
+      // waitForSelector with timeout will throw an error if element doesn't appear within timeout
+      const reelTitleElement = await page.waitForSelector(reelTitleSelector, {
+        timeout: 8000,  // 8 seconds timeout
+        visible: true
+      });
 
+      // If we get here, element was found - extract text
+      reelTitle = await page.evaluate(element => element.textContent || "", reelTitleElement);
+
+    } catch (error) {
+      // Element wasn't found within timeout, or other error occurred
+      console.log('Reel title not found within timeout, continuing with empty title');
+      // reelTitle remains empty string
+    }
 
     await browser.close();
 
 
     const reelToShortsAiInputJSON  = {
-      title: reelTitle,
+      title: reelTitle, // this can be empty
       reelType,
     }
 
     const { youtubeTitle, description } = await reelToShortsAiPromptGenerator(reelToShortsAiInputJSON);
 
     let title;
-    if (reelTitle) {
+    if (youtubeTitle) {
 
       if (!youtubeTitle) {
         title = await fallBackTitleGenerator(reelType);
